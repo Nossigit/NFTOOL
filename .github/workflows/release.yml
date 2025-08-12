@@ -88,12 +88,12 @@ jobs:
           if (-not (Test-Path $zipName)) { throw "ZIP build failed." }
           Write-Host "Created $zipName"
 
-      - name: Upload to GitHub Release (EXE + ZIP)
+        - name: Upload to GitHub Release (EXE + ZIP)
         uses: softprops/action-gh-release@v2
         with:
-          files:
-            - dist/NFTOOL.exe
-            - NFTOOL_${{ github.ref_name }}.zip
+          files: |
+            dist/NFTOOL.exe
+            NFTOOL_${{ github.ref_name }}.zip
           fail_on_unmatched_files: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
