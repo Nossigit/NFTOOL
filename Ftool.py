@@ -20,7 +20,7 @@ from packaging import version
 
 
 # ====== APP / UPDATE SETTINGS ======
-VERSION = "1.0.1"               # <— deine aktuelle App-Version hier pflegen
+VERSION = "1.0.2"               # <— deine aktuelle App-Version hier pflegen
 GITHUB_OWNER = "Nossigit"
 GITHUB_REPO  = "NFTOOL"
 RELEASE_ASSET_NAME = "NFTOOL.exe"  #
