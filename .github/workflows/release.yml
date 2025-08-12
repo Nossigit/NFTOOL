@@ -71,22 +71,24 @@ jobs:
       - name: Create ZIP package (EXE + README)
         shell: pwsh
         run: |
-          $tag = if ("${{ github.ref_name }}") { "${{ github.ref_name }}" } else { "manual" }
+          $tag = "${{ github.ref_name }}"
+          if (-not $tag) { $tag = "manual" }
           $zipName = "NFTOOL_$tag.zip"
-          New-Item -ItemType Directory package -Force | Out-Null
-          Copy-Item dist/NFTOOL.exe package/
-          @"
-NFTOOL $tag
-
-Usage:
-- Entpacken
-- NFTOOL.exe starten
-"@ | Out-File -FilePath package/README.txt -Encoding UTF8
-          Compress-Archive -Path package/* -DestinationPath $zipName -Force
+          New-Item -ItemType Directory -Force package | Out-Null
+          Copy-Item dist\NFTOOL.exe package\
+          $readme = @(
+            "NFTOOL $tag",
+            "",
+            "Usage:",
+            "- Entpacken",
+            "- NFTOOL.exe starten"
+          )
+          Set-Content -Path package\README.txt -Value $readme -Encoding UTF8
+          Compress-Archive -Path package\* -DestinationPath $zipName -Force
           if (-not (Test-Path $zipName)) { throw "ZIP build failed." }
           Write-Host "Created $zipName"
 
-          - name: Upload to GitHub Release (EXE + ZIP)
+      - name: Upload to GitHub Release (EXE + ZIP)
         uses: softprops/action-gh-release@v2
         with:
           files:
