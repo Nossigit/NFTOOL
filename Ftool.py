@@ -20,11 +20,11 @@ from packaging import version
 
 
 # ====== APP / UPDATE SETTINGS ======
-VERSION = "1.0.2"               # <— deine aktuelle App-Version hier pflegen
+VERSION = "1.0.3"               
 GITHUB_OWNER = "Nossigit"
 GITHUB_REPO  = "NFTOOL"
 RELEASE_ASSET_NAME = "NFTOOL.exe"  #
-GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN", "").strip()  # optional, um Rate Limits zu vermeiden
+GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN", "").strip() 
 
 # ---------- THEME ----------
 BG = "#36393F"; PANEL = "#2F3136"; PANEL_HOVER = "#3A3D43"
