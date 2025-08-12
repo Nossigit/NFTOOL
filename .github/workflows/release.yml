@@ -4,6 +4,9 @@ on:
   push:
     tags:
       - "v*"
+  release:
+    types: [published]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -12,6 +15,26 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Show repo tree (debug)
+        shell: pwsh
+        run: |
+          Write-Host "Listing repo root:"
+          Get-ChildItem -Force | Format-List
+          Write-Host "Listing .github/workflows:"
+          if (Test-Path .github/workflows) { Get-ChildItem .github/workflows | Format-List } else { Write-Host "No workflows dir" }
+
+      - name: Validate required files
+        shell: pwsh
+        run: |
+          $missing = @()
+          foreach($f in @("NFTOOL.py","Ficon_multi.ico","play_darkmode_smooth.png","pause_darkmode_smooth.png")) {
+            if (-not (Test-Path $f)) { $missing += $f }
+          }
+          if ($missing.Count -gt 0) {
+            Write-Error "Missing required files: $($missing -join ', ')"
+            exit 1
+          }
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -33,9 +56,8 @@ jobs:
           if (Test-Path requirements.txt) {
             pip install -r requirements.txt
           } else {
-            pip install pywin32 requests packaging
+            pip install pywin32 requests packaging pyinstaller
           }
-          pip install pyinstaller
 
       - name: Build EXE (PyInstaller)
         shell: pwsh
@@ -46,15 +68,13 @@ jobs:
             --add-data "pause_darkmode_smooth.png;." NFTOOL.py
           if (-not (Test-Path dist/NFTOOL.exe)) { throw "Build failed: dist/NFTOOL.exe not found." }
 
-      - name: Create ZIP package
+      - name: Create ZIP package (EXE + README)
         shell: pwsh
         run: |
-          $tag = "${{ github.ref_name }}"           # z.B. v1.0.0
+          $tag = if ("${{ github.ref_name }}") { "${{ github.ref_name }}" } else { "manual" }
           $zipName = "NFTOOL_$tag.zip"
-          # Paket-Ordner
           New-Item -ItemType Directory package -Force | Out-Null
           Copy-Item dist/NFTOOL.exe package/
-          # (optional) kurze Readme beilegen
           @"
 NFTOOL $tag
 
@@ -62,7 +82,6 @@ Usage:
 - Entpacken
 - NFTOOL.exe starten
 "@ | Out-File -FilePath package/README.txt -Encoding UTF8
-          # ZIP erstellen
           Compress-Archive -Path package/* -DestinationPath $zipName -Force
           if (-not (Test-Path $zipName)) { throw "ZIP build failed." }
           Write-Host "Created $zipName"
