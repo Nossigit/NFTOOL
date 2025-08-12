@@ -18,6 +18,7 @@ import shutil
 import subprocess
 from packaging import version
 
+
 # ====== APP / UPDATE SETTINGS ======
 VERSION = "1.0.0"               # <— deine aktuelle App-Version hier pflegen
 GITHUB_OWNER = "Nossigit"
@@ -107,17 +108,25 @@ WM_XBUTTONDOWN=0x020B
 XBUTTON1 = 0x0001
 XBUTTON2 = 0x0002
 
+# Kompatibilität:
+try:
+    ULONG_PTR = ctypes.wintypes.ULONG_PTR  # wenn vorhanden, nutzen
+except AttributeError:
+    # pointer-breite unsigned Integer – portable Variante
+    ULONG_PTR = ctypes.c_size_t
+
+
 class POINT(ctypes.Structure):
     _fields_ = [("x", ctypes.c_long), ("y", ctypes.c_long)]
+
 class MSLLHOOKSTRUCT(ctypes.Structure):
     _fields_ = [
         ("pt", POINT),
-        ("mouseData", wintypes.DWORD),
-        ("flags", wintypes.DWORD),
-        ("time", wintypes.DWORD),
-        ("dwExtraInfo", wintypes.ULONG_PTR),
+        ("mouseData", ctypes.wintypes.DWORD),
+        ("flags", ctypes.wintypes.DWORD),
+        ("time", ctypes.wintypes.DWORD),
+        ("dwExtraInfo", ULONG_PTR),  # <— hier statt wintypes.ULONG_PTR
     ]
-
 MOUSE_NAME_TO_CODE = {
     "MOUSE1": "L", "LBUTTON": "L", "LEFT": "L",
     "MOUSE2": "R", "RBUTTON": "R", "RIGHT": "R",
