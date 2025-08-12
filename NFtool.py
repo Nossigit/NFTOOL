@@ -20,7 +20,7 @@ from packaging import version
 
 
 # ====== APP / UPDATE SETTINGS ======
-VERSION = "0.4.0"               
+VERSION = "0.4.1"               
 GITHUB_OWNER = "Nossigit"
 GITHUB_REPO  = "NFTOOL"
 RELEASE_ASSET_NAME = "NFTOOL.exe"  #
