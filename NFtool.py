@@ -11,7 +11,7 @@ from ctypes import wintypes
 from packaging import version
 
 # ====== APP / UPDATE SETTINGS ======
-VERSION = "0.9.0"
+VERSION = "0.9.1"
 GITHUB_OWNER = "Nossigit"
 GITHUB_REPO  = "NFTOOL"
 RELEASE_ASSET_NAME = "NFTOOL.exe"
