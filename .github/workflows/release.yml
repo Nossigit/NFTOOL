@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     tags:
-      - 'v*'  # trigger for tags like v0.9.1
+      - 'v*'   # trigger on tags like v0.9.1
 
 jobs:
   build:
@@ -25,34 +25,33 @@ jobs:
           python -m pip install --upgrade pip
           pip install pyinstaller packaging requests pywin32
 
-      # Sanity check: list top-level files so we can see names in the log
-      - name: List files (debug)
+      # Optional: list files for quick debugging
+      - name: List repo files (debug)
         shell: pwsh
         run: |
           Get-ChildItem -Force | Select-Object Name,Length,LastWriteTime | Format-Table
 
-      # Build EXE (note: NFtool.py with lowercase "t")
+      # Build EXE (note: main file is NFtool.py with lowercase "t")
       - name: Build EXE
         shell: cmd
         run: |
-          pyinstaller --onefile --windowed --noconfirm --icon=Ficon_multi.ico ^
+          pyinstaller --onefile --windowed --noconfirm --name NFTOOL --icon=Ficon_multi.ico ^
             --add-data "play_darkmode_smooth.png;." ^
             --add-data "pause_darkmode_smooth.png;." ^
             --add-data "trash_dark_smooth.png;." ^
             --add-data "add_darkmode_smooth.png;." ^
             --add-data "Ficon_multi.ico;." NFtool.py
-          rename dist\NFtool.exe NFTOOL.exe
 
       - name: Create ZIP
         shell: pwsh
         run: |
-          Compress-Archive -Path NFTOOL.exe -DestinationPath NFTOOL.zip -Force
+          Compress-Archive -Path dist/NFTOOL.exe -DestinationPath NFTOOL.zip -Force
 
       - name: Upload release assets
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            NFTOOL.exe
+            dist/NFTOOL.exe
             NFTOOL.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
