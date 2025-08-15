@@ -1,4 +1,4 @@
-# 🎯 NFTOOL – Multi-Window Key Sender
+# NFTOOL – Multi-Window Key Sender
 
 <p align="center">
   <a href="https://github.com/Nossigit/NFTOOL/releases/latest/download/NFTOOL.exe">
