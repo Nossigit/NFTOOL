@@ -53,9 +53,3 @@ Originally built for Flyff players, but works with any windowed application.
 Some antivirus tools (including Windows Defender) may flag executables created with **PyInstaller** as suspicious.  
 This is a **false positive**. You can submit the EXE to Microsoft for review here:  
 https://www.microsoft.com/wdsi/filesubmission
-
----
-
-## 📄 License
-MIT License – see the [LICENSE](LICENSE) file for details.
-
